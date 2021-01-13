@@ -1,0 +1,15 @@
+Package: conservationSpillover
+Title: Estimation of spillover effects in conservation
+Version: 0.0.1
+Authors@R: 
+    person(given = "Bradley",
+           family = "Saul",
+           role = c("aut", "cre"),
+           email = "bradleysaul@gmail.com",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: TODO
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
