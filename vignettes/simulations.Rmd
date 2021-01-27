@@ -1,0 +1,61 @@
+---
+title: "Simulations"
+author: "Bradley Saul"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Simulations}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r packages}
+library(magrittr)
+library(conservationSpillover)
+library(mgcv)
+```
+
+```{r data}
+basisdt    <- readRDS("data/simulation_basisdt.rds")
+simulator1 <- readRDS("data/plasmode_simulator_1.rds")
+ids        <- readRDS("data/bas_3000_sample.rds")
+```
+
+```{r}
+create_sim_basis <- create_sim_basis_maker(basisdt)
+
+test <- create_sim_basis(seed_id = ids[1], 10)
+
+
+gaminator <- make_pw_estimator(
+  gam_fitter,
+  rhs_formula = ~ (A*A_tilde)*(log(ha)*slope +
+                               I(p_wet == 0) + p_wet +
+                               I(neighbor_p_wet == 0) + neighbor_p_wet +
+                               log1p(coast_2500) + travel) + s(A, log(ha)) + s(A, slope) +
+    s(p_wet) +
+    s(travel),
+  B = 15
+)
+
+
+
+x <- simulator1(test, exposure_newparms = c(`log(ha)` = 0.1),
+                outcome_newparms = c(A = 0.0, A_tilde = 0.0, `A:A_tilde` = 0.0,
+                                           `log(ha)` = 0.1))
+lm(Y ~ A*A_tilde, data = x)
+# mean(x$A)
+z <- gaminator(x)
+z
+summary(z)
+
+```

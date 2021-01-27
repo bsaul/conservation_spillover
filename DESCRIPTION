@@ -9,6 +9,10 @@ Authors@R:
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: TODO
 License: MIT + file LICENSE
+Imports: 
+  dplyr (>= 1.0.2),
+  mgcv (>= 1.8-33),
+  sf (>= 0.9-6)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

@@ -76,4 +76,6 @@ adt <-
       })
   ) 
 
+saveRDS(file = "data/analysis_data.rds")
+rm(spdt, dt)
   
