@@ -10,7 +10,8 @@
     .f = ~ {
       sf::st_intersection(x, .x) %>%
         sf::st_cast(warn = FALSE) %>%
-        sf::st_length()
+        sf::st_length() %>%
+        sum()
     }
   )
 }

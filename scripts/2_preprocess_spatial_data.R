@@ -17,7 +17,7 @@ nrows <- NULL # set to 100 (e.g.) for testing pipeline
 # Load parcel data ####
 sp_parcels <- 
   st_read(
-    dsn = here::here("data", "pc_MA"), 
+    dsn = here::here("data", "extdata", "pc_MA"), 
     layer = "pc_MA",
     stringsAsFactors = FALSE
   ) %>%
@@ -26,7 +26,7 @@ sp_parcels <-
 # Load township data ####
 sp_townships <- 
   sf::st_read(
-    dsn = here::here("data", "townssurvey_shp"),
+    dsn = here::here("data", "extdata", "townssurvey_shp"),
     layer = "TOWNSSURVEY_POLY",
     stringsAsFactors = FALSE
   ) %>%
@@ -48,13 +48,12 @@ sp_parcels %>%
     # Indices of the other parcels touching each parcel 
     neighbors = purrr::map(st_touches(geometry), ~ .x),
 
-    # Name of township in which the centroid of a parcel lies.
-    township  = sf::st_within(centroid , sp_townships) %>%
+    # Name of township in which the centroid (buffered by 2km) of a parcel lies.
+    township  = sf::st_within(centroid, sp_townships) %>%
       # Handle case that centroid is not in any township and
       # --just to be sure-- the case it is in multiple townships
       purrr::map_int(.f = ~ if(length(.x) == 0) { NA_integer_ } else { .x[1] } ) %>%
       as.data.frame(sp_townships)[., "town"]
-      
   ) %>%
   # { # TODO: this approach is a bit computationally intensive
   #   df <- .
@@ -87,6 +86,18 @@ sp_parcels %>%
   } %>%
   st_set_geometry("geometry") ->
   out
+
+# Checks ###
+# Check that all parcels have a township
+stopifnot(!anyNA(out$township))
+
+# Check that the sum of neighbor boundaries is within 1% of boundary length
+stopifnot(all(purrr::map2_lgl(
+  .x = out$boundary_length,
+  .y = out$neighbor_boundary_lengths,
+  .f = ~ sum(.y) < (.x * 1.01)
+)))
+
 
 saveRDS(out, file = outFile)
 

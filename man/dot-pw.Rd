@@ -5,7 +5,7 @@
 \title{Estimate the density ratio by modeling whether an observation is from
 the permuted dataset or original dataset}
 \usage{
-.pw(dt, rhs_formula, fitter)
+.pw(dt, rhs_formula, fitter, modify_C, predictor, fitter_args)
 }
 \description{
 Estimate the density ratio by modeling whether an observation is from

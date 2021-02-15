@@ -1,0 +1,108 @@
+---
+title: "SWIG"
+author: "Bradley Saul"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+#output: pdf_document
+vignette: >
+  %\VignetteIndexEntry{SWIG}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+```{tikz, fig.cap = "swig", fig.ext='png',fig.width=8}
+\usetikzlibrary{arrows,shapes.arrows,shapes.geometric,shapes.multipart,
+   decorations.pathmorphing,positioning,shapes.swigs,}
+
+%\resizebox{100mm}{100mm}{
+  
+
+\begin{tikzpicture}
+\tikzset{line width=0.5pt, outer sep=0pt,
+        ell/.style={draw,fill=white, inner sep=2pt, line width=0.5pt},
+        swig hsplit={gap=2pt, line color lower=red}}; % inner line width right=0.5pt
+
+\node[name=li1, ell, shape=ellipse]{$L_{i1}$}; 
+\node[below=2mm of li1] (dummyi1) {};
+\node[below=7mm of li1] (dummyi2) {};
+\node[name=ai1, right=5mm of dummyi2, shape=swig hsplit]{
+  \nodepart{upper}{$A_{i1}$}
+  \nodepart{lower}{$a_{i1}$} };
+\node[name=atildei1, right=30mm of dummyi1, ell, draw=red,
+      shape=ellipse]{$\tilde{a}_{i1}$};
+\node[name=yi1, right=25mm of ai1, ell, 
+      shape=ellipse]{$Y_{i1}(a_{i1}, \tilde{a}_{i1})$}; 
+
+\node[name=li2, right=35mm of li1, ell, shape=ellipse]{$L_{i2}$}; 
+\node[name=ai2, right=10mm of yi1, shape=swig hsplit]{
+  \nodepart{upper}{$A_{i2}$}
+  \nodepart{lower}{$a_{i2}$} };
+\node[name=atildei2, right=65mm of dummyi1, ell, draw=red,
+      shape=ellipse]{$\tilde{a}_{i2}$};
+\node[name=yi2, right=25mm of ai2, ell, 
+      shape=ellipse]{$Y_{i1}(a_{i1}, \tilde{a}_{i1}, a_{i2}, \tilde{a}_{i2})$}; 
+
+
+
+\node[name=lj1, below=20mm of li1, ell, shape=ellipse]{$L_{j1}$}; 
+\node[below=2mm of lj1] (dummyj1) {};
+\node[below=7mm of lj1] (dummyj2) {};
+\node[name=aj1, right=5mm of dummyj2, shape=swig hsplit]{
+  \nodepart{upper}{$A_{j1}$}
+  \nodepart{lower}{$a_{j1}$} };
+\node[name=atildej1, right=30mm of dummyj1, draw=red,
+      ell, shape=ellipse]{$\tilde{a}_{j1}$};
+\node[name=yj1, right=25mm of aj1, ell,
+      shape=ellipse]{$Y_{j1}(a_{j1}, \tilde{a}_{j1})$}; 
+
+\node[name=lk1, below=20mm of lj1, ell, shape=ellipse]{$L_{k1}$}; 
+\node[below=2mm of lk1] (dummyk1) {};
+\node[below=7mm of lk1] (dummyk2) {};
+\node[name=ak1, right=5mm of dummyk2, shape=swig hsplit]{
+  \nodepart{upper}{$A_{k1}$}
+  \nodepart{lower}{$a_{k1}$} };
+\node[name=atildek1, right=30mm of dummyk1, draw=red,
+      ell, shape=ellipse]{$\tilde{a}_{k1}$};
+\node[name=yk1, right=25mm of ak1, ell, 
+      shape=ellipse]{$Y_{k1}(a_{k1}, \tilde{a}_{k1})$}; 
+
+
+\draw[->,line width=0.5pt,>=stealth]
+    (li1) edge (ai1)
+    (lj1) edge (aj1)
+    (lk1) edge (ak1)
+
+    (ai1) edge[out=340,in=180] (yi1)
+    (atildei1) edge (yi1)
+
+    (aj1) edge[out=340,in=180] (yj1)
+    (atildej1) edge (yj1)
+
+    (ak1) edge[out=340,in=180] (yk1)
+    (atildek1) edge (yk1)
+
+    (ai1) edge[out=330,in=160] (atildej1)
+    (ai1) edge[out=330,in=160] (atildek1)
+
+    (aj1) edge[out=330,in=210] (atildei1)
+    (aj1) edge[out=330,in=210] (atildek1)
+
+    (ak1) edge[out=330,in=185] (atildei1)
+    (ak1) edge[out=330,in=185] (atildej1)
+
+;
+\end{tikzpicture}
+
+%}
+
+```

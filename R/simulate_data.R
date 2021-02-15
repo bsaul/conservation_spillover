@@ -1,25 +1,28 @@
 
 #' Create a simulator function of a GAM
 #' 
-#' @param formula the model formula
-#' @param data dataset
-#' @param family the model family
+#' @param model 
 #' @param post a `function(x) {...}` applied to the output of the resulting 
 #'    function
 #' @return a closure of `newdata` and `newparms` that returns a vector of simulated
 #'    data from the fitted GAM model
 #' @importFrom mgcv gam
 #' @export
-create_model_simulator <- function(formula, data, family, post = identity){
-  m    <- mgcv::gam(formula = formula, data = data, family = family)
-  fm   <- formula(m)
-  beta <- coef(m)
-  inv  <- family()[["linkinv"]]
-  function(newdata, newparms){
-    X <- mgcv::gam(fm, data = newdata, family = family(), fit = FALSE)[["X"]]
-    beta[names(newparms)] <- newparms
+create_model_simulator <- function(model, post = identity){
+  fm   <- rlang::expr_text(formula(model))
+  beta <- coef(model)
+  fam  <- model[["family"]]
+  inv  <- fam[["linkinv"]]
+
+  on.exit({ rm(model) })
+  
+  function(newdata, parameter_update = function(b, x) { b }){
+    X <- mgcv::gam(as.formula(fm), data = newdata, family = fam, fit = FALSE)[["X"]]
+    beta <- parameter_update(b = beta, x = X)
     post(inv(X %*% beta))
   }
+  
+
 }
 
 #' Create a simulator
@@ -102,3 +105,43 @@ create_sim_basis_maker <- function(basisdt){
   }
 }
 
+#' Create a simulation basis dataset
+#' @export
+make_sim_basis_data <- function(basis_maker, id, buffer, 
+                                checker    = function(hash) { FALSE },
+                                redirector = function(out, hash) { out }){
+  sha <- digest::sha1(list(basis_maker, id, buffer))
+  
+  if (checker(sha)) { return(invisible(NULL)) }
+  
+  dt <- 
+    basis_maker(seed_id = id, km_buffer = buffer) %>%
+    dplyr::select(-geometry)
+  
+  out <-
+    list(
+      data = dt,
+      sha = sha,
+      id = id,
+      buffer = buffer,
+      n  = nrow(dt)
+    )
+  
+  redirector(out, sha)
+}
+
+
+#' Create a simulation dataset
+#' @export
+make_sim <- function(basedt, simulator, 
+                     parms = list(exposure_newparms = identity, outcome_newparms = identity)){
+  simdt <- do.call(simulator, args = c(list(newdata = basedt), parms))
+  
+  list(
+    data   = simdt,
+    mean_A = mean(simdt$A),
+    mean_A_tilde = mean(simdt$A_tilde),
+    mean_Y = mean(simdt$Y),
+    parms  = parms
+  )
+}

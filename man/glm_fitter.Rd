@@ -4,7 +4,7 @@
 \alias{glm_fitter}
 \title{Estimate weights by GLM}
 \usage{
-glm_fitter(formula, data)
+glm_fitter(formula, data, ...)
 }
 \description{
 Estimate weights by GLM

@@ -4,14 +4,10 @@
 \alias{create_model_simulator}
 \title{Create a simulator function of a GAM}
 \usage{
-create_model_simulator(formula, data, family, post = identity)
+create_model_simulator(model, post = identity)
 }
 \arguments{
-\item{formula}{the model formula}
-
-\item{data}{dataset}
-
-\item{family}{the model family}
+\item{model}{}
 
 \item{post}{a \code{function(x) {...}} applied to the output of the resulting
 function}

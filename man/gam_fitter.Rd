@@ -4,7 +4,7 @@
 \alias{gam_fitter}
 \title{Estimate weights by GAM}
 \usage{
-gam_fitter(formula, data)
+gam_fitter(formula, data, ...)
 }
 \description{
 Estimate weights by GAM

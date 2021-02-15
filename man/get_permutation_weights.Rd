@@ -4,7 +4,15 @@
 \alias{get_permutation_weights}
 \title{Estimate permutation weights B times and average the results}
 \usage{
-get_permutation_weights(dt, B, rhs_formula, fitter)
+get_permutation_weights(
+  dt,
+  B,
+  rhs_formula,
+  fitter,
+  modify_C = identity,
+  predictor,
+  fitter_args = list()
+)
 }
 \description{
 Estimate permutation weights B times and average the results
