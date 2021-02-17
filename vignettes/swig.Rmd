@@ -20,18 +20,18 @@ knitr::opts_chunk$set(
 ```
 
 
-```{tikz, fig.cap = "swig", fig.ext='png',fig.width=8}
+```{tikz, echo=FALSE, fig.cap = "SWIG template", fig.ext='png'}
 \usetikzlibrary{arrows,shapes.arrows,shapes.geometric,shapes.multipart,
    decorations.pathmorphing,positioning,shapes.swigs,}
 
 %\resizebox{100mm}{100mm}{
-  
 
 \begin{tikzpicture}
 \tikzset{line width=0.5pt, outer sep=0pt,
         ell/.style={draw,fill=white, inner sep=2pt, line width=0.5pt},
         swig hsplit={gap=2pt, line color lower=red}}; % inner line width right=0.5pt
 
+ 
 \node[name=li1, ell, shape=ellipse]{$L_{i1}$}; 
 \node[below=2mm of li1] (dummyi1) {};
 \node[below=7mm of li1] (dummyi2) {};
@@ -42,17 +42,6 @@ knitr::opts_chunk$set(
       shape=ellipse]{$\tilde{a}_{i1}$};
 \node[name=yi1, right=25mm of ai1, ell, 
       shape=ellipse]{$Y_{i1}(a_{i1}, \tilde{a}_{i1})$}; 
-
-\node[name=li2, right=35mm of li1, ell, shape=ellipse]{$L_{i2}$}; 
-\node[name=ai2, right=10mm of yi1, shape=swig hsplit]{
-  \nodepart{upper}{$A_{i2}$}
-  \nodepart{lower}{$a_{i2}$} };
-\node[name=atildei2, right=65mm of dummyi1, ell, draw=red,
-      shape=ellipse]{$\tilde{a}_{i2}$};
-\node[name=yi2, right=25mm of ai2, ell, 
-      shape=ellipse]{$Y_{i1}(a_{i1}, \tilde{a}_{i1}, a_{i2}, \tilde{a}_{i2})$}; 
-
-
 
 \node[name=lj1, below=20mm of li1, ell, shape=ellipse]{$L_{j1}$}; 
 \node[below=2mm of lj1] (dummyj1) {};
@@ -79,8 +68,11 @@ knitr::opts_chunk$set(
 
 \draw[->,line width=0.5pt,>=stealth]
     (li1) edge (ai1)
+    (li1) edge[out=0,in=150] (yi1)
     (lj1) edge (aj1)
+    (lj1) edge[out=0,in=150] (yj1)
     (lk1) edge (ak1)
+    (lk1) edge[out=0,in=150] (yk1)
 
     (ai1) edge[out=340,in=180] (yi1)
     (atildei1) edge (yi1)
